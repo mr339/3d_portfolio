@@ -14,7 +14,7 @@ import { useEffect, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 
-// import islandScene from "../assets/3d/island.glb";
+import islandScene from "../assets/3d/island.glb";
 
 export function Island({
   isRotating,
@@ -36,7 +36,7 @@ export function Island({
   const dampingFactor = 0.95;
 
   // Handle pointer (mouse or touch) down event
-  const handlePointerDown = (event) => {
+  const handlePointerDown = (event: any) => {
     event.stopPropagation();
     event.preventDefault();
     setIsRotating(true);
@@ -49,14 +49,14 @@ export function Island({
   };
 
   // Handle pointer (mouse or touch) up event
-  const handlePointerUp = (event) => {
+  const handlePointerUp = (event: any) => {
     event.stopPropagation();
     event.preventDefault();
     setIsRotating(false);
   };
 
   // Handle pointer (mouse or touch) move event
-  const handlePointerMove = (event) => {
+  const handlePointerMove = (event: any) => {
     event.stopPropagation();
     event.preventDefault();
     if (isRotating) {
@@ -79,7 +79,7 @@ export function Island({
   };
 
   // Handle keydown events
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: any) => {
     if (event.key === "ArrowLeft") {
       if (!isRotating) setIsRotating(true);
 
@@ -94,7 +94,7 @@ export function Island({
   };
 
   // Handle keyup events
-  const handleKeyUp = (event) => {
+  const handleKeyUp = (event: any) => {
     if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
       setIsRotating(false);
     }
