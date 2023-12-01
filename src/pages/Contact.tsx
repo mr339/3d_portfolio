@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { useState } from "react";
-import { Island } from "../models";
+import emailjs from "@emailjs/browser";
 
 const Contact = () => {
   const formRef = useRef(null);
@@ -9,12 +9,35 @@ const Contact = () => {
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const handleFocus = (e: any) => {
+  const handleFocus = () => {};
+  const handleBlur = () => {};
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     setisLoading(true);
+
+    emailjs
+      .send(
+        import.meta.env.VITE_APP_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_APP_EMAILJS_TEMPLATE_ID,
+        {
+          from_name: form.name,
+          to_name: "JavaScript Mastery",
+          from_email: form.email,
+          to_email: "sparkgrm339@gmail.com",
+          message: form.message,
+        },
+        import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY
+      )
+      .then(() => {
+        setisLoading(false);
+        setForm({ name: "", email: "", message: "" });
+      })
+      .catch((err: any) => {
+        setisLoading(false);
+
+        console.log(err);
+      });
   };
-  const handleBlur = () => {};
-  const handleSubmit = () => {};
 
   return (
     <section className="relative flex lg:flex-row flex-col max-container">
