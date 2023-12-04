@@ -1,20 +1,31 @@
-import React, { useRef } from "react";
+import { Suspense, useRef } from "react";
 import { useState } from "react";
 import emailjs from "@emailjs/browser";
+import { Canvas } from "@react-three/fiber";
+import { Fox } from "../models";
+import { Loader } from "../components";
+import useAlert from "../hooks/useAlert";
 
 const Contact = () => {
   const formRef = useRef(null);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [currentAnimation, setCurrentAnimation] = useState("idle");
   const [isLoading, setisLoading] = useState(false);
+  const { alert, showAlert, hideAlert } = useAlert();
+
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const handleFocus = () => {};
-  const handleBlur = () => {};
+  const handleFocus = () => {
+    setCurrentAnimation("walk");
+  };
+  const handleBlur = () => {
+    setCurrentAnimation("idle");
+  };
   const handleSubmit = (e: any) => {
     e.preventDefault();
     setisLoading(true);
-
+    setCurrentAnimation("hit");
     emailjs
       .send(
         import.meta.env.VITE_APP_EMAILJS_SERVICE_ID,
@@ -30,12 +41,29 @@ const Contact = () => {
       )
       .then(() => {
         setisLoading(false);
-        setForm({ name: "", email: "", message: "" });
+        showAlert({
+          show: true,
+          text: "Thank you for your message 😃",
+          type: "success",
+        });
+        setTimeout(() => {
+          hideAlert();
+          setCurrentAnimation("idle");
+          setForm({
+            name: "",
+            email: "",
+            message: "",
+          });
+        }, [3000]);
       })
       .catch((err: any) => {
         setisLoading(false);
-
-        console.log(err);
+        setCurrentAnimation("idle");
+        showAlert({
+          show: true,
+          text: "I didn't receive your message 😢",
+          type: "danger",
+        });
       });
   };
 
@@ -102,6 +130,36 @@ const Contact = () => {
             {isLoading ? "Sending..." : "Send Message"}
           </button>
         </form>
+      </div>
+
+      <div className="lg:w-1/2 w-full lg:h-auto md:h-[550px] h-[350px]">
+        <Canvas
+          camera={{
+            position: [0, 0, 5],
+            fov: 75,
+            near: 0.1,
+            far: 1000,
+          }}
+        >
+          <directionalLight position={[0, 0, 1]} intensity={2.5} />
+          <ambientLight intensity={1} />
+          <pointLight position={[5, 10, 0]} intensity={2} />
+          <spotLight
+            position={[10, 10, 10]}
+            angle={0.15}
+            penumbra={1}
+            intensity={2}
+          />
+
+          <Suspense fallback={<Loader />}>
+            <Fox
+              currentAnimation={currentAnimation}
+              position={[0.5, 0.35, 0]}
+              rotation={[12.629, -0.6, 0]}
+              scale={[0.5, 0.5, 0.5]}
+            />
+          </Suspense>
+        </Canvas>
       </div>
     </section>
   );
