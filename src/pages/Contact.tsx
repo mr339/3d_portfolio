@@ -5,6 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import { Fox } from "../models";
 import { Loader } from "../components";
 import useAlert from "../hooks/useAlert";
+import Alert from "../components/Alert";
 
 const Contact = () => {
   const formRef = useRef(null);
@@ -56,7 +57,7 @@ const Contact = () => {
           });
         }, [3000]);
       })
-      .catch((err: any) => {
+      .catch(() => {
         setisLoading(false);
         setCurrentAnimation("idle");
         showAlert({
@@ -69,6 +70,7 @@ const Contact = () => {
 
   return (
     <section className="relative flex lg:flex-row flex-col max-container">
+      {alert.show && <Alert {...alert} />}
       <div className="flex-1 min-w-[50%] flex flex-col">
         <h1 className="head-text">Get in touch</h1>
         <form

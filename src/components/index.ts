@@ -1,4 +1,5 @@
 import Loader from "./Loader";
-import HomeInfo from "./Homeinfo";
+import HomeInfo from "./HomeInfo";
+import Alert from "./Alert";
 
-export { Loader, HomeInfo };
+export { Loader, HomeInfo, Alert };
